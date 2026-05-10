@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FIRST MOVE — FLY Leadership</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#060608;--surface:#0e0e12;--border:rgba(255,255,255,0.06);
+  --text:#ece9e0;--muted:#5a5a6a;
+  --p1:#f5c842;--p2:#e94560;--p3:#4ecdc4;--p4:#a78bfa;--p5:#6bcb77;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#222;}
+
+.screen{display:none;}.screen.active{display:block;}
+
+/* NAV */
+#mainNav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(to bottom,rgba(6,6,8,0.96),transparent);backdrop-filter:blur(4px);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;}
+.nav-logo span{color:var(--p1);}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+#navUser{display:none;align-items:center;gap:10px;}
+.nav-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--p1);}
+
+/* HERO */
+#heroSection{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center;padding:0 24px;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(245,200,66,0.07),transparent 70%),radial-gradient(ellipse 40% 40% at 15% 80%,rgba(78,205,196,0.04),transparent),radial-gradient(ellipse 40% 40% at 85% 70%,rgba(233,69,96,0.04),transparent);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
+.hero-eyebrow{font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--p1);margin-bottom:24px;opacity:0;animation:fadeUp .8s .3s forwards;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,16vw,200px);line-height:.88;letter-spacing:2px;opacity:0;animation:fadeUp .9s .5s forwards;}
+.hero-title .gold{color:var(--p1);}
+.hero-sub{margin-top:24px;font-size:clamp(14px,2vw,18px);color:var(--muted);font-style:italic;letter-spacing:1px;opacity:0;animation:fadeUp .8s .8s forwards;}
+.hero-cta{margin-top:44px;opacity:0;animation:fadeUp .8s 1s forwards;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.hero-scroll{position:absolute;bottom:32px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s 1.3s forwards;}
+.hero-scroll span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+/* TYPING CURSOR */
+.typed-cursor{display:inline-block;width:5px;background:var(--p1);animation:blink .7s infinite;vertical-align:top;margin-left:4px;border-radius:2px;height:0.85em;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* GLOBAL PROGRESS BAR */
+#globalBar{position:fixed;top:0;left:0;right:0;z-index:300;height:3px;background:rgba(255,255,255,0.04);}
+#globalBarFill{height:100%;width:0%;background:linear-gradient(to right,var(--p1),var(--p5));transition:width 1.2s ease;box-shadow:0 0 8px rgba(245,200,66,0.4);}
+#globalBarTip{position:fixed;top:8px;right:52px;z-index:300;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);opacity:0;transition:opacity .4s;}
+#globalBarTip.show{opacity:1;}
+
+/* XP ROLL */
+@keyframes rollIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.xp-roll{animation:rollIn .5s ease forwards;}
+
+.scroll-bar{width:1px;height:48px;background:linear-gradient(to bottom,var(--muted),transparent);animation:scrollPulse 2s infinite;}
+
+/* BTNS */
+.btn{padding:13px 30px;border-radius:6px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-gold{background:var(--p1);color:#060608;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,200,66,0.35);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{border-color:rgba(255,255,255,0.2);}
+.btn-sm{padding:10px 22px;font-size:12px;}
+
+/* PHRASES */
+.phrases-section{padding:80px 48px;text-align:center;border-top:1px solid var(--border);}
+.phrase-block{padding:56px 0;border-bottom:1px solid var(--border);opacity:0;transform:translateY(28px);transition:all .7s;}
+.phrase-block.vis{opacity:1;transform:none;}
+.phrase-text{font-family:'Playfair Display',serif;font-size:clamp(24px,4.5vw,56px);line-height:1.25;}
+.phrase-text em{color:var(--p1);font-style:normal;}
+
+/* PILLARS */
+.pillar-section{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;}
+.pillar-section.flip{direction:rtl;}.pillar-section.flip>*{direction:ltr;}
+.pillar-visual{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:50vh;}
+.p-bg-num{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:200px;opacity:.03;color:#fff;user-select:none;line-height:1;}
+.p-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(90px);opacity:.1;pointer-events:none;}
+.p-icon{font-size:88px;position:relative;z-index:2;animation:float 4s ease-in-out infinite;}
+.pillar-content{padding:80px 56px;display:flex;flex-direction:column;justify-content:center;}
+.p-tag{font-size:10px;letter-spacing:5px;text-transform:uppercase;margin-bottom:14px;opacity:.6;}
+.p-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,76px);line-height:.9;margin-bottom:10px;}
+.p-reward{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;margin-bottom:22px;border:1px solid;}
+.p-meaning{font-size:15px;line-height:1.8;color:rgba(236,233,224,.68);margin-bottom:22px;max-width:420px;}
+.p-quote{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;padding:18px 22px;border-left:2px solid;margin-bottom:24px;opacity:.75;}
+.examples{display:flex;flex-direction:column;gap:9px;}
+.ex{display:flex;gap:12px;padding:13px 16px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:13px;line-height:1.6;color:rgba(236,233,224,.65);border-left:2px solid;}
+
+/* ARENA GATE */
+.arena-gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px;position:relative;overflow:hidden;}
+.arena-gate::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(245,200,66,0.05),transparent);}
+.gate-label{font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
+.gate-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,9vw,110px);line-height:.92;margin-bottom:22px;}
+.gate-sub{font-size:15px;color:var(--muted);max-width:460px;line-height:1.7;margin-bottom:36px;}
+
+/* AUTH */
+#authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px;}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px;width:100%;max-width:460px;}
+.auth-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;margin-bottom:6px;}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.6;}
+.auth-tabs{display:flex;gap:0;margin-bottom:28px;background:rgba(255,255,255,0.04);border-radius:8px;padding:4px;}
+.auth-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;border-radius:6px;transition:all .2s;color:var(--muted);}
+.auth-tab.active{background:var(--p1);color:#060608;}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block;}
+.form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:13px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:rgba(245,200,66,0.4);}
+.form-input::placeholder{color:var(--muted);}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:7px;}
+.av-opt{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;background:rgba(255,255,255,0.04);border:2px solid transparent;transition:all .2s;}
+.av-opt.sel{border-color:var(--p1);background:rgba(245,200,66,0.1);}
+.auth-err{font-size:12px;color:var(--p2);margin-bottom:14px;display:none;}
+.auth-switch{margin-top:18px;text-align:center;font-size:13px;color:var(--muted);}
+.auth-switch span{color:var(--p1);cursor:pointer;font-weight:600;}
+
+/* DASH */
+#dashScreen{padding-top:68px;}
+.dash-tabs{display:flex;padding:0 48px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:68px;z-index:150;overflow-x:auto;}
+.d-tab{padding:15px 22px;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.d-tab.active{color:var(--text);border-bottom-color:var(--p1);}
+
+/* PROFILE */
+.profile-hero{padding:72px 48px 56px;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;text-align:center;}
+.profile-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(245,200,66,0.03),transparent);}
+.orbit-wrap{position:relative;width:210px;height:210px;margin-bottom:28px;flex-shrink:0;}
+.orbit-avatar{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--surface);border:2px solid var(--border);z-index:2;}
+.orbit-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid rgba(255,255,255,0.05);transform:translate(-50%,-50%);}
+.o-star{position:absolute;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--surface);border:1px solid var(--border);transition:all .5s;}
+.o-star.bronze{border-color:rgba(205,127,50,.6);box-shadow:0 0 10px rgba(205,127,50,.3);background:rgba(205,127,50,.08);}
+.o-star.diamond{border-color:rgba(78,205,196,.6);box-shadow:0 0 10px rgba(78,205,196,.3);background:rgba(78,205,196,.08);}
+.o-star.elite{border-color:rgba(167,139,250,.6);box-shadow:0 0 14px rgba(167,139,250,.4);background:rgba(167,139,250,.08);}
+.o-star.ascendant{border-color:rgba(245,200,66,.8);box-shadow:0 0 18px rgba(245,200,66,.5),0 0 36px rgba(245,200,66,.2);background:rgba(245,200,66,.12);animation:starPulse 2s infinite;}
+.p-username{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:3px;margin-bottom:6px;}
+.p-rank-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:22px;}
+.stats-row{display:flex;gap:44px;justify-content:center;margin-bottom:28px;}
+.pstat{text-align:center;}
+.pstat-val{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--p1);}
+.pstat-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.titles-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.t-chip{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;background:rgba(255,255,255,0.05);}
+
+/* CHAMPION */
+#champState{display:none;padding:72px 48px;text-align:center;background:linear-gradient(135deg,rgba(245,200,66,0.04),rgba(107,203,119,0.04));border-top:1px solid var(--border);}
+#champState.show{display:block;}
+.champ-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:48px;border:2px solid var(--p1);box-shadow:0 0 40px rgba(245,200,66,.3),0 0 80px rgba(245,200,66,.1);animation:champPulse 3s infinite;}
+.champ-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,92px);background:linear-gradient(to right,var(--p1),var(--p5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.champ-sub{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:rgba(236,233,224,.45);}
+
+/* TASK ARENA */
+.arena-section{padding:56px 48px;max-width:880px;margin:0 auto;}
+.sec-label{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.sec-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5vw,54px);margin-bottom:36px;}
+.task-list{display:flex;flex-direction:column;gap:14px;}
+.t-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s,transform .2s;}
+.t-card:hover{transform:translateY(-1px);}
+.t-card.done{border-color:rgba(107,203,119,.3);}
+.t-head{padding:22px 26px;display:flex;align-items:center;gap:16px;cursor:pointer;}
+.t-ico{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;background:rgba(255,255,255,0.04);}
+.t-meta{flex:1;}
+.t-pillar{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600;margin-bottom:3px;}
+.t-title{font-size:16px;font-weight:600;}
+.t-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.xp-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,0.04);}
+.t-status{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.t-status.done{background:rgba(107,203,119,.12);border-color:var(--p5);color:var(--p5);}
+.t-body{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;}
+.t-body.open{max-height:650px;padding:0 26px 26px;}
+.t-desc{font-size:13px;color:rgba(236,233,224,.6);line-height:1.8;margin-bottom:18px;}
+.story-box{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);resize:vertical;min-height:120px;outline:none;transition:border-color .2s;margin-bottom:12px;}
+.story-box:focus{border-color:rgba(255,255,255,0.15);}
+.story-box::placeholder{color:var(--muted);}
+.submit-row{display:flex;align-items:center;justify-content:space-between;}
+.wc{font-size:12px;color:var(--muted);}
+
+/* ANALYZER */
+#analyzerOverlay{position:fixed;inset:0;background:rgba(6,6,8,.96);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;z-index:500;text-align:center;padding:24px;}
+#analyzerOverlay.show{display:flex;}
+.an-icon{font-size:44px;animation:spin 2s linear infinite;}
+.an-msg{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--p1);}
+.an-sub{font-size:13px;color:var(--muted);max-width:320px;}
+.xp-pop{font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--p1);display:none;animation:xpBoom .5s forwards;}
+
+/* LEADERBOARD */
+.lb-section{padding:56px 48px;max-width:880px;margin:0 auto;}
+.lb-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.lb-row{padding:14px 26px;display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(255,255,255,0.03);transition:background .15s;}
+.lb-row:hover{background:rgba(255,255,255,0.02);}
+.lb-row:last-child{border-bottom:none;}
+.lb-num{font-family:'Bebas Neue',sans-serif;font-size:22px;width:32px;text-align:center;color:var(--muted);}
+.lb-num.g{color:var(--p1);}
+.lb-num.s{color:#aaa;}
+.lb-num.b{color:#cd7f32;}
+.lb-av2{font-size:22px;width:36px;text-align:center;}
+.lb-info{flex:1;}
+.lb-name2{font-weight:600;font-size:14px;}
+.lb-titles2{font-size:11px;color:var(--muted);margin-top:2px;}
+.lb-stars2{font-size:12px;color:var(--p1);}
+.lb-xp2{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p1);}
+.lb-empty{padding:44px;text-align:center;color:var(--muted);font-size:14px;}
+
+/* STORY WALL */
+.story-wall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.sw-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;transition:border-color .3s,transform .2s;}
+.sw-card:hover{transform:translateY(-2px);}
+.sw-card.pending{opacity:.5;border-style:dashed;}
+.sw-card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.sw-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(255,255,255,0.06);}
+.sw-user{flex:1;}
+.sw-username{font-size:13px;font-weight:600;}
+.sw-pillar-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.sw-xp{font-family:'Bebas Neue',sans-serif;font-size:18px;}
+.sw-story{font-size:13px;line-height:1.75;color:rgba(236,233,224,.65);margin-bottom:14px;}
+.sw-story.clamped{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.sw-read-more{font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-weight:600;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+.sw-pending-msg{font-size:13px;color:var(--muted);font-style:italic;}
+
+/* PASSPORT */
+.pp-section{padding:56px 48px;max-width:880px;margin:0 auto;}
+.pp-locked{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:48px;text-align:center;}
+.pp-card{background:linear-gradient(135deg,#0e0e12,#14141c);border:1px solid rgba(245,200,66,.2);border-radius:20px;padding:48px;position:relative;overflow:hidden;display:none;}
+.pp-card.unlocked{display:block;}
+.pp-glow-corner{position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.08),transparent);pointer-events:none;}
+.pp-header{display:flex;align-items:center;gap:22px;margin-bottom:32px;}
+.pp-av{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;border:2px solid rgba(245,200,66,.3);background:rgba(245,200,66,.06);}
+.pp-card-lbl{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.pp-uname{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;}
+.pp-asc{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--p1);margin-top:3px;}
+.pp-stats{display:flex;gap:0;margin-bottom:28px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.pp-stat{flex:1;padding:20px;text-align:center;border-right:1px solid var(--border);}
+.pp-stat:last-child{border-right:none;}
+.pp-stat-val{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--p1);}
+.pp-stat-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.pp-titles{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+.pp-quote{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;text-align:center;color:rgba(236,233,224,.5);padding:18px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:24px;}
+.pp-seal{text-align:center;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);}
+.pp-seal span{color:var(--p1);}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 20px;font-size:13px;z-index:600;transform:translateY(60px);opacity:0;transition:all .3s;max-width:300px;}
+#toast.show{transform:none;opacity:1;}
+#toast.ok{border-color:var(--p5);}
+#toast.err{border-color:var(--p2);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:none;}}
+@keyframes scrollPulse{0%,100%{opacity:.2;}50%{opacity:1;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes xpBoom{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes starPulse{0%,100%{box-shadow:0 0 18px rgba(245,200,66,.5),0 0 36px rgba(245,200,66,.2);}50%{box-shadow:0 0 28px rgba(245,200,66,.8),0 0 56px rgba(245,200,66,.3);}}
+@keyframes champPulse{0%,100%{box-shadow:0 0 40px rgba(245,200,66,.3);}50%{box-shadow:0 0 60px rgba(245,200,66,.55),0 0 100px rgba(245,200,66,.2);}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;}
+.reveal.vis{opacity:1;transform:none;}
+
+@media(max-width:768px){
+  .pillar-section{grid-template-columns:1fr;}.pillar-section.flip{direction:ltr;}
+  .pillar-visual{min-height:260px;}.pillar-content{padding:44px 22px;}
+  #mainNav{padding:14px 22px;}.nav-links a:not(:last-child){display:none;}
+  .arena-section,.lb-section,.pp-section{padding:40px 20px;}
+  .profile-hero{padding:56px 20px 40px;}.stats-row{gap:20px;}
+  .auth-card{padding:32px 20px;}.phrases-section{padding:56px 22px;}
+  .dash-tabs{padding:0 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">F<span>L</span>Y</div>
+  <div class="nav-links">
+    <a onclick="scrollTo2('pillarsAnchor')">Pillars</a>
+    <a onclick="goToDash('arena')">Tasks</a>
+    <a onclick="goToDash('leaderboard')">Leaderboard</a>
+    <div id="navUser" style="display:none;align-items:center;gap:10px;">
+      <div class="nav-avatar" id="navAv" onclick="goToDash('profile')">?</div>
+      <a onclick="doLogout()" style="color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Logout</a>
+    </div>
+    <a id="navLoginBtn" onclick="showAuth()">Login</a>
+  </div>
+</nav>
+
+<div id="globalBar"><div id="globalBarFill"></div></div>
+<div id="globalBarTip">0 / 0 tasks globally</div>
+
+<!-- ══════════ LANDING ══════════ -->
+<div id="landingScreen" class="screen active">
+
+  <section id="heroSection">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div style="position:relative;z-index:2;">
+      <p class="hero-eyebrow">FFE · Five Pillars of Leadership</p>
+      <h1 class="hero-title"><span id="typedLine1"></span><br><span class="gold" id="typedLine2"></span><span class="typed-cursor" id="typedCursor"></span></h1>
+      <p class="hero-sub">Leadership earned through action.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold" onclick="showAuth()">Begin Your Journey</button>
+        <button class="btn btn-outline" onclick="scrollTo2('pillarsAnchor')">Explore Pillars ↓</button>
+      </div>
+    </div>
+    <div class="hero-scroll"><span>Scroll</span><div class="scroll-bar"></div></div>
+  </section>
+
+  <section class="phrases-section">
+    <div class="phrase-block reveal"><p class="phrase-text">"Knowledge means <em>nothing</em><br>without action."</p></div>
+    <div class="phrase-block reveal"><p class="phrase-text">"Leaders don't wait<br>for <em>permission.</em>"</p></div>
+    <div class="phrase-block reveal"><p class="phrase-text">"Every great result lives on the other side<br>of the moment you wanted to <em>stop.</em>"</p></div>
+    <div class="phrase-block reveal"><p class="phrase-text">"The best ideas<br>sound <em>strange</em> at first."</p></div>
+  </section>
+
+  <div id="pillarsAnchor"></div>
+
+  <!-- P1 -->
+  <section class="pillar-section" style="background:#07070a;">
+    <div class="pillar-visual">
+      <div class="p-bg-num">01</div>
+      <div class="p-glow" style="background:var(--p1);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="p-icon">⚡</div>
+    </div>
+    <div class="pillar-content reveal">
+      <p class="p-tag" style="color:var(--p1)">Pillar 01</p>
+      <h2 class="p-name" style="color:var(--p1)">Taking<br>Initiative</h2>
+      <span class="p-reward" style="color:var(--p1);border-color:rgba(245,200,66,.3);background:rgba(245,200,66,.06)">🏆 Earn: First Mover</span>
+      <p class="p-meaning">Initiative means acting without being told. It's the habit of seeing a need and filling it before anyone asks. Leaders don't wait for the green light — they create it.</p>
+      <p class="p-quote" style="border-color:var(--p1)">"The secret to getting ahead is getting started." — Mark Twain</p>
+      <div class="examples">
+        <div class="ex" style="border-color:var(--p1)">🎯 Organizing an event without being asked</div>
+        <div class="ex" style="border-color:var(--p1)">🤝 Helping juniors before they even have to ask</div>
+        <div class="ex" style="border-color:var(--p1)">🚀 Starting a project before the deadline panic hits</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P2 -->
+  <section class="pillar-section flip" style="background:#09070a;">
+    <div class="pillar-visual">
+      <div class="p-bg-num">02</div>
+      <div class="p-glow" style="background:var(--p2);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="p-icon">👁️</div>
+    </div>
+    <div class="pillar-content reveal">
+      <p class="p-tag" style="color:var(--p2)">Pillar 02</p>
+      <h2 class="p-name" style="color:var(--p2)">Conscien-<br>tiousness</h2>
+      <span class="p-reward" style="color:var(--p2);border-color:rgba(233,69,96,.3);background:rgba(233,69,96,.06)">🛡️ Earn: Sentinel</span>
+      <p class="p-meaning">Doing the right thing when nobody is watching. Your character is built in those quiet moments — the choices you make when there's no applause, no audience, no reward.</p>
+      <p class="p-quote" style="border-color:var(--p2)">"The true test of character is what you do when no one is watching." — John Wooden</p>
+      <div class="examples">
+        <div class="ex" style="border-color:var(--p2)">📋 Staying consistent with your responsibilities</div>
+        <div class="ex" style="border-color:var(--p2)">🧹 Cleaning up after yourself when no one will know</div>
+        <div class="ex" style="border-color:var(--p2)">✅ Submitting work you're actually proud of</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P3 -->
+  <section class="pillar-section" style="background:#07090a;">
+    <div class="pillar-visual">
+      <div class="p-bg-num">03</div>
+      <div class="p-glow" style="background:var(--p5);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="p-icon">🧩</div>
+    </div>
+    <div class="pillar-content reveal">
+      <p class="p-tag" style="color:var(--p5)">Pillar 03</p>
+      <h2 class="p-name" style="color:var(--p5)">Problem<br>Solving</h2>
+      <span class="p-reward" style="color:var(--p5);border-color:rgba(107,203,119,.3);background:rgba(107,203,119,.06)">🧠 Earn: Solver</span>
+      <p class="p-meaning">Problem solving is a skill, not a talent. Define what's actually broken, explore options without judgment, act on the best one, and learn from the result. Stay calm. Break it down.</p>
+      <p class="p-quote" style="border-color:var(--p5)">"Problems are not stop signs. They are guidelines." — Robert H. Schuller</p>
+      <div class="examples">
+        <div class="ex" style="border-color:var(--p5)">🔍 Identifying and fixing a real issue around you</div>
+        <div class="ex" style="border-color:var(--p5)">🧘 Thinking calmly when everyone else panics</div>
+        <div class="ex" style="border-color:var(--p5)">⚡ Creating solutions under pressure</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P4 -->
+  <section class="pillar-section flip" style="background:#0a0807;">
+    <div class="pillar-visual">
+      <div class="p-bg-num">04</div>
+      <div class="p-glow" style="background:var(--p3);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="p-icon">🔥</div>
+    </div>
+    <div class="pillar-content reveal">
+      <p class="p-tag" style="color:var(--p3)">Pillar 04</p>
+      <h2 class="p-name" style="color:var(--p3)">Persever-<br>ance</h2>
+      <span class="p-reward" style="color:var(--p3);border-color:rgba(78,205,196,.3);background:rgba(78,205,196,.06)">🔥 Earn: Relentless</span>
+      <p class="p-meaning">Perseverance is refusing to quit when things get hard. Not blind stubbornness — deliberate grit. Absorb failure, adapt, and keep going. Every great result lives past the moment you wanted to stop.</p>
+      <p class="p-quote" style="border-color:var(--p3)">"Fall seven times, stand up eight." — Japanese Proverb</p>
+      <div class="examples">
+        <div class="ex" style="border-color:var(--p3)">📚 Returning to study seriously after failing an exam</div>
+        <div class="ex" style="border-color:var(--p3)">💪 Staying consistent with a goal despite setbacks</div>
+        <div class="ex" style="border-color:var(--p3)">🎯 Finishing what you started, no matter what</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5 -->
+  <section class="pillar-section" style="background:#08070a;">
+    <div class="pillar-visual">
+      <div class="p-bg-num">05</div>
+      <div class="p-glow" style="background:var(--p4);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="p-icon">🧠</div>
+    </div>
+    <div class="pillar-content reveal">
+      <p class="p-tag" style="color:var(--p4)">Pillar 05</p>
+      <h2 class="p-name" style="color:var(--p4)">Innovative-<br>ness</h2>
+      <span class="p-reward" style="color:var(--p4);border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.06)">👁️ Earn: Visionary</span>
+      <p class="p-meaning">Innovativeness is the courage to do things differently. Question the default. See what others miss. Create solutions that never existed before. The best ideas always sound strange at first.</p>
+      <p class="p-quote" style="border-color:var(--p4)">"Innovation distinguishes between a leader and a follower." — Steve Jobs</p>
+      <div class="examples">
+        <div class="ex" style="border-color:var(--p4)">🎨 Creating entirely new methods to solve old problems</div>
+        <div class="ex" style="border-color:var(--p4)">⚙️ Improving systems nobody thought to question</div>
+        <div class="ex" style="border-color:var(--p4)">💡 Bringing unique ideas nobody else thought of</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GATE -->
+  <section class="arena-gate">
+    <p class="gate-label">You've read the theory</p>
+    <h2 class="gate-title">Now prove it<br><span style="color:var(--p1)">in real life.</span></h2>
+    <p class="gate-sub">Reading is just the beginning. True learning happens when you act. Complete real tasks for each pillar and earn your rank.</p>
+    <button class="btn btn-gold" onclick="showAuth()" style="font-size:14px;padding:16px 44px;letter-spacing:3px;">ENTER TASK ARENA</button>
+  </section>
+
+</div><!-- /landingScreen -->
+
+<!-- ══════════ AUTH ══════════ -->
+<div id="authScreen" class="screen">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px;">
+    <div class="auth-card">
+      <h2 class="auth-title">JOIN THE<br><span style="color:var(--p1)">ARENA.</span></h2>
+      <p class="auth-sub">Create your profile. Earn your titles. Prove the pillars.</p>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabSU" onclick="switchTab('signup')">Sign Up</div>
+        <div class="auth-tab" id="tabLI" onclick="switchTab('login')">Login</div>
+      </div>
+      <p class="auth-err" id="authErr"></p>
+      <!-- SIGNUP -->
+      <div id="fmSignup">
+        <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="suName" placeholder="e.g. ShadowX" maxlength="20"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="suEmail" type="email" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="suPass" type="password" placeholder="Min. 6 characters"/></div>
+        <div class="form-group"><label class="form-label">Choose Avatar</label><div class="avatar-grid" id="avGrid"></div></div>
+        <button class="btn btn-gold" style="width:100%;margin-top:8px;" onclick="doSignUp()">Create Account</button>
+      </div>
+      <!-- LOGIN -->
+      <div id="fmLogin" style="display:none;">
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="liEmail" type="email" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="liPass" type="password" placeholder="Password"/></div>
+        <button class="btn btn-gold" style="width:100%;margin-top:8px;" onclick="doLogin()">Login</button>
+      </div>
+      <p class="auth-switch" id="authSwitch">Already have an account? <span onclick="switchTab('login')">Login</span></p>
+      <p style="text-align:center;margin-top:14px;"><a onclick="showLanding()" style="font-size:12px;color:var(--muted);cursor:pointer;">← Back to site</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dashScreen" class="screen">
+  <div class="dash-tabs">
+    <button class="d-tab" id="dt-profile" onclick="showTab('profile')">Profile</button>
+    <button class="d-tab" id="dt-arena" onclick="showTab('arena')">Task Arena</button>
+    <button class="d-tab" id="dt-leaderboard" onclick="showTab('leaderboard')">Leaderboard</button>
+    <button class="d-tab" id="dt-wall" onclick="showTab('wall')">Story Wall</button>
+    <button class="d-tab" id="dt-passport" onclick="showTab('passport')">SSC Passport</button>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="tab-profile">
+    <div class="profile-hero">
+      <div class="profile-hero-bg"></div>
+      <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;">
+        <div class="orbit-wrap" id="orbitWrap">
+          <div class="orbit-ring" style="width:156px;height:156px;"></div>
+          <div class="orbit-ring" style="width:200px;height:200px;"></div>
+          <div class="orbit-avatar" id="profAv">?</div>
+        </div>
+        <h2 class="p-username" id="profName">—</h2>
+        <span class="p-rank-badge" id="profRank" style="background:rgba(100,100,100,.1);color:var(--muted)">🌱 Seedling</span>
+        <div class="stats-row">
+          <div class="pstat"><div class="pstat-val" id="profXP" style="min-width:60px;">0</div><div class="pstat-lbl">Total XP</div></div>
+          <div class="pstat"><div class="pstat-val" id="profTasks">0/5</div><div class="pstat-lbl">Tasks Done</div></div>
+          <div class="pstat"><div class="pstat-val" id="profStars">0</div><div class="pstat-lbl">Stars</div></div>
+        </div>
+        <div class="titles-row" id="profTitles"></div>
+        <button onclick="refreshUD()" style="margin-top:20px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">↻ Refresh Profile</button>
+      </div>
+    </div>
+    <div id="champState">
+      <div class="champ-ring">🏆</div>
+      <h2 class="champ-title">THE ASCENDED</h2>
+      <p class="champ-sub">"Most wait. You moved first."</p>
+    </div>
+  </div>
+
+  <!-- ARENA TAB -->
+  <div id="tab-arena" style="display:none;">
+    <div class="arena-section">
+      <p class="sec-label">Real World Tasks</p>
+      <h2 class="sec-heading">Task <span style="color:var(--p1)">Arena.</span></h2>
+      <div class="task-list" id="taskList"></div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD TAB -->
+  <div id="tab-leaderboard" style="display:none;">
+    <div class="lb-section">
+      <p class="sec-label">Live Rankings</p>
+      <h2 class="sec-heading">Leader<span style="color:var(--p1)">board.</span></h2>
+      <div class="lb-wrap" id="lbWrap"><div class="lb-empty">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- STORY WALL TAB -->
+  <div id="tab-wall" style="display:none;">
+    <div class="lb-section">
+      <p class="sec-label">Community Stories</p>
+      <h2 class="sec-heading">Story <span style="color:var(--p1)">Wall.</span></h2>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.7;">Real stories from real people who lived the pillars. Read. Get inspired. Then write your own.</p>
+
+      <!-- PILLAR FILTER -->
+      <div id="wallFilter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;">
+        <button class="wall-filter-btn active" onclick="filterWall(0)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--p1);background:rgba(245,200,66,0.1);color:var(--p1);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">All Pillars</button>
+        <button class="wall-filter-btn" onclick="filterWall(1)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">⚡ Initiative</button>
+        <button class="wall-filter-btn" onclick="filterWall(2)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">👁️ Conscientiousness</button>
+        <button class="wall-filter-btn" onclick="filterWall(3)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">🧩 Problem Solving</button>
+        <button class="wall-filter-btn" onclick="filterWall(4)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">🔥 Perseverance</button>
+        <button class="wall-filter-btn" onclick="filterWall(5)" style="padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;">🧠 Innovativeness</button>
+      </div>
+
+      <div id="wallContent"><div class="lb-empty">Loading stories...</div></div>
+    </div>
+  </div>
+
+  <!-- PASSPORT TAB -->
+  <div id="tab-passport" style="display:none;">
+    <div class="pp-section">
+      <p class="sec-label">SSC — Social Share Card</p>
+      <h2 class="sec-heading">Your <span style="color:var(--p1)">Passport.</span></h2>
+      <div class="pp-locked" id="ppLocked">
+        <div style="font-size:44px;margin-bottom:14px;">🔒</div>
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:30px;margin-bottom:8px;">Complete All 5 Pillars</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.7;">Finish every task in the Task Arena to unlock your SSC Passport — a shareable proof that you lived the pillars.</p>
+      </div>
+      <div class="pp-card" id="ppCard">
+        <div class="pp-glow-corner"></div>
+        <div class="pp-header">
+          <div class="pp-av" id="ppAv">?</div>
+          <div>
+            <p class="pp-card-lbl">SSC · FLY LEADERSHIP PASSPORT</p>
+            <p class="pp-uname" id="ppUname">—</p>
+            <p class="pp-asc">✦ THE ASCENDED ✦</p>
+          </div>
+        </div>
+        <div class="pp-stats">
+          <div class="pp-stat"><div class="pp-stat-val" id="ppXP">0</div><div class="pp-stat-lbl">Total XP</div></div>
+          <div class="pp-stat"><div class="pp-stat-val">5 ⭐</div><div class="pp-stat-lbl">Stars</div></div>
+          <div class="pp-stat"><div class="pp-stat-val">5/5</div><div class="pp-stat-lbl">Pillars</div></div>
+        </div>
+        <div class="pp-titles" id="ppTitles"></div>
+        <p class="pp-quote">"Most wait. You moved first."</p>
+        <p class="pp-seal">FLY Leadership · <span>NIT Silchar</span> · Certified ✦</p>
+        <div style="text-align:center;margin-top:24px;">
+          <button class="btn btn-gold" onclick="dlPassport()">Download Passport</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /dashScreen -->
+
+<!-- ANALYZER OVERLAY -->
+<div id="analyzerOverlay">
+  <div class="an-icon" id="anIcon">⚙️</div>
+  <p class="an-msg" id="anMsg">Analyzing leadership depth…</p>
+  <p class="an-sub" id="anSub">Reading your story. Measuring initiative. Calculating impact.</p>
+  <div class="xp-pop" id="xpPop">+<span id="xpAmt">0</span> XP</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,setDoc,getDoc,updateDoc,collection,getDocs,orderBy,query}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCZfbSStvLssJoJwncy-HZLTBXIzsnXFGM",authDomain:"ffe-fly-project.firebaseapp.com",projectId:"ffe-fly-project",storageBucket:"ffe-fly-project.firebasestorage.app",messagingSenderId:"753939567950",appId:"1:753939567950:web:5ef88587966b21c6ebba1f"});
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let CU=null,UD=null;
+
+const AVATARS=['🦅','🐉','🦊','🌙','⚡','🔥','🧊','🌊','🏹','🎯','🦁','🌟'];
+let selAv=AVATARS[0];
+
+const TASKS=[
+  {id:1,pillar:'Initiative',col:'--p1',icon:'⚡',title:'The First Move',xpBase:80,reward:'🏆 First Mover',
+   desc:'Do something nobody asked you to do. Look around — your hostel, class, or club. Find one problem nobody is solving and fix it without being asked. Organize a messy space, start a study group, help a junior who looks lost, or send notes to your class group.<br><br><strong>Write your story:</strong> What did you do? Why did you choose that? How did people react? What did you feel?'},
+  {id:2,pillar:'Conscientiousness',col:'--p2',icon:'👁️',title:'No One Is Watching',xpBase:80,reward:'🛡️ Sentinel',
+   desc:'Over the next 48 hours, find a moment where you could cut a corner — and choose not to. Submit work you\'re proud of. Be honest when lying would be easier. Help someone when no one will see it.<br><br><strong>Write your story:</strong> What was the situation? What was the easy path? What did you choose? Why?'},
+  {id:3,pillar:'Problem Solving',col:'--p5',icon:'🧩',title:'Find The Break Point',xpBase:80,reward:'🧠 Solver',
+   desc:'Pick a real problem you or someone around you is facing. Apply the 4-step method: 1) <strong>Define</strong> the root problem. 2) <strong>Explore</strong> at least 3 possible solutions. 3) <strong>Act</strong> on the best one. 4) <strong>Learn</strong> — what happened?<br><br><strong>Write your story:</strong> Walk through each step with your real problem.'},
+  {id:4,pillar:'Perseverance',col:'--p3',icon:'🔥',title:"Don't You Dare Quit",xpBase:80,reward:'🔥 Relentless',
+   desc:"Finish something you've been avoiding or gave up on. Set a timer for 45 minutes and work on it non-stop. Come back the next day and do it again.<br><br><strong>Write your story:</strong> What did you return to? What made it hard? What kept you going?"},
+  {id:5,pillar:'Innovativeness',col:'--p4',icon:'🧠',title:'Break The Default',xpBase:80,reward:'👁️ Visionary',
+   desc:'Do something the unconventional way. Find one routine task and do it differently. Use a new tool, try a new format, flip the order. Experiment and see what happens.<br><br><strong>Write your story:</strong> What did you change? What was surprising? What would you keep?'},
+];
+
+const RANKS=[
+  {min:5,label:'🔥 THE ASCENDED',bg:'rgba(245,200,66,.15)',col:'var(--p1)'},
+  {min:4,label:'🦅 Leader',bg:'rgba(233,69,96,.1)',col:'var(--p2)'},
+  {min:3,label:'⚡ Achiever',bg:'rgba(167,139,250,.1)',col:'var(--p4)'},
+  {min:1,label:'🌿 Grower',bg:'rgba(78,205,196,.1)',col:'var(--p3)'},
+  {min:0,label:'🌱 Seedling',bg:'rgba(100,100,100,.1)',col:'var(--muted)'},
+];
+
+const TIER_COLORS={'🏆 First Mover':'var(--p1)','🛡️ Sentinel':'var(--p2)','🧠 Solver':'var(--p5)','🔥 Relentless':'var(--p3)','👁️ Visionary':'var(--p4)'};
+
+// ── AVATAR GRID ──
+function buildAvGrid(){
+  const g=document.getElementById('avGrid');if(!g)return;
+  g.innerHTML=AVATARS.map((a,i)=>`<div class="av-opt${i===0?' sel':''}" onclick="window._pickAv(this,'${a}')">${a}</div>`).join('');
+  selAv=AVATARS[0];
+}
+window._pickAv=(el,av)=>{document.querySelectorAll('.av-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');selAv=av;};
+
+// ── SCREENS ──
+window.showLanding=()=>sw('landingScreen');
+window.showAuth=()=>{sw('authScreen');buildAvGrid();}
+window.showDash=(tab)=>{sw('dashScreen');showTab(tab||'profile');renderDash();}
+window.goToDash=(tab)=>{if(CU)showDash(tab);else showAuth();}
+function sw(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+
+window.showTab=(tab)=>{
+  ['profile','arena','leaderboard','wall','passport'].forEach(t=>{
+    const c=document.getElementById(`tab-${t}`);
+    const b=document.getElementById(`dt-${t}`);
+    if(c)c.style.display=t===tab?'block':'none';
+    if(b)b.className=`d-tab${t===tab?' active':''}`;
+  });
+  if(tab==='leaderboard')renderLB();
+  if(tab==='passport')renderPP();
+  if(tab==='arena')renderTasks();
+  if(tab==='wall')renderWall(0);
+};
+
+// ── AUTH TABS ──
+window.switchTab=(tab)=>{
+  const li=tab==='login';
+  document.getElementById('fmSignup').style.display=li?'none':'block';
+  document.getElementById('fmLogin').style.display=li?'block':'none';
+  document.getElementById('tabSU').className=`auth-tab${li?'':' active'}`;
+  document.getElementById('tabLI').className=`auth-tab${li?' active':''}`;
+  document.getElementById('authSwitch').innerHTML=li?"Don't have an account? <span onclick=\"switchTab('signup')\">Sign Up</span>":"Already have an account? <span onclick=\"switchTab('login')\">Login</span>";
+  document.getElementById('authErr').style.display='none';
+};
+
+// ── SIGN UP ──
+window.doSignUp=async()=>{
+  const name=document.getElementById('suName').value.trim();
+  const email=document.getElementById('suEmail').value.trim();
+  const pass=document.getElementById('suPass').value;
+  const err=document.getElementById('authErr');
+  if(!name||!email||!pass){err.textContent='Fill all fields.';err.style.display='block';return;}
+  if(pass.length<6){err.textContent='Password min 6 characters.';err.style.display='block';return;}
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const d={username:name,avatar:selAv,xp:0,tasksCompleted:[],titles:[],createdAt:Date.now()};
+    await setDoc(doc(db,'users',cred.user.uid),d);
+    UD=d;showToast(`Welcome, ${name}! ⚡`,true);
+  }catch(e){err.textContent=e.code==='auth/email-already-in-use'?'Email already in use.':e.message;err.style.display='block';}
+};
+
+// ── LOGIN ──
+window.doLogin=async()=>{
+  const email=document.getElementById('liEmail').value.trim();
+  const pass=document.getElementById('liPass').value;
+  const err=document.getElementById('authErr');
+  const btn=document.querySelector('#fmLogin .btn-gold');
+  err.style.display='none';
+  if(!email||!pass){err.textContent='Fill both fields.';err.style.display='block';return;}
+  btn.textContent='Logging in…';btn.disabled=true;
+  try{
+    const cred=await signInWithEmailAndPassword(auth,email,pass);
+    const snap=await getDoc(doc(db,'users',cred.user.uid));
+    if(snap.exists()){UD=snap.data();CU=cred.user;showDash('profile');updateNav();}
+    else{err.textContent='Account exists but no profile found. Try signing up again.';err.style.display='block';}
+  }catch(e){
+    console.error(e);
+    if(e.code==='auth/user-not-found')err.textContent='No account with this email.';
+    else if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')err.textContent='Wrong password.';
+    else if(e.code==='auth/invalid-email')err.textContent='Invalid email format.';
+    else err.textContent=e.message;
+    err.style.display='block';
+  }finally{btn.textContent='LOGIN';btn.disabled=false;}
+};
+
+window.doLogout=async()=>{await signOut(auth);CU=null;UD=null;showLanding();updateNav();};
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    CU=user;
+    try{
+      const snap=await getDoc(doc(db,'users',user.uid));
+      if(snap.exists()){
+        UD=snap.data();
+        console.log('Loaded user data:',UD);
+        showDash('profile');updateNav();
+      } else {
+        console.warn('No user doc found for uid:',user.uid);
+      }
+    }catch(e){
+      console.error('Firestore load error:',e);
+      showToast('Connection error. Check Firestore rules.',false);
+    }
+  } else {updateNav();}
+});
+
+// force refresh user data from Firestore
+window.refreshUD=async()=>{
+  if(!CU)return;
+  const snap=await getDoc(doc(db,'users',CU.uid));
+  if(snap.exists()){UD=snap.data();renderDash();showToast('Profile refreshed!',true);}
+};
+
+function updateNav(){
+  const nu=document.getElementById('navUser');
+  const nb=document.getElementById('navLoginBtn');
+  if(CU&&UD){nu.style.display='flex';nb.style.display='none';document.getElementById('navAv').textContent=UD.avatar||'?';}
+  else{nu.style.display='none';nb.style.display='block';}
+}
+
+// ── RENDER DASH ──
+function renderDash(){
+  if(!UD)return;
+  const tasks=UD.tasksCompleted||[];
+  const xp=UD.xp||0;
+  const rank=RANKS.find(r=>tasks.length>=r.min);
+  document.getElementById('profAv').textContent=UD.avatar||'?';
+  document.getElementById('profName').textContent=UD.username.toUpperCase();
+  document.getElementById('profXP').textContent=xp;rollXP(document.getElementById('profXP'),xp);
+  document.getElementById('profTasks').textContent=`${tasks.length}/5`;
+  document.getElementById('profStars').textContent=tasks.length;
+  const rb=document.getElementById('profRank');rb.textContent=rank.label;rb.style.background=rank.bg;rb.style.color=rank.col;
+  document.getElementById('profTitles').innerHTML=(UD.titles||[]).map(t=>`<span class="t-chip" style="color:${TIER_COLORS[t]||'var(--text)'};">${t}</span>`).join('');
+  renderOrbit(tasks,xp);
+  if(tasks.length===5)document.getElementById('champState').classList.add('show');
+}
+
+function renderOrbit(tasks,xp){
+  const wrap=document.getElementById('orbitWrap');
+  wrap.querySelectorAll('.o-star').forEach(e=>e.remove());
+  const r=90;
+  const starTiers=[{min:76,cls:'ascendant',ico:'🔥'},{min:51,cls:'elite',ico:'👑'},{min:26,cls:'diamond',ico:'💠'},{min:1,cls:'bronze',ico:'⭐'},{min:0,cls:'',ico:'○'}];
+  TASKS.forEach((t,i)=>{
+    const ang=(i/5)*2*Math.PI-Math.PI/2;
+    const x=105+r*Math.cos(ang)-17;const y=105+r*Math.sin(ang)-17;
+    const done=tasks.includes(t.id);
+    const perTaskXP=done&&tasks.length?Math.round(xp/tasks.length):0;
+    const tier=starTiers.find(s=>perTaskXP>=s.min)||starTiers[4];
+    const star=document.createElement('div');
+    star.className=`o-star${done?' '+tier.cls:''}`;
+    star.style.cssText=`left:${x}px;top:${y}px;`;
+    star.title=t.pillar;star.textContent=done?tier.ico:'○';
+    wrap.appendChild(star);
+  });
+}
+
+// ── TASK CARDS ──
+function renderTasks(){
+  if(!UD)return;
+  const done=UD.tasksCompleted||[];
+  const container=document.getElementById('taskList');
+  container.innerHTML=TASKS.map(t=>{
+    const isDone=done.includes(t.id);
+    const c=`var(${t.col})`;
+    const darkBg=t.col==='--p1'||t.col==='--p5'||t.col==='--p3';
+    return `<div class="t-card${isDone?' done':''}" id="tc-${t.id}">
+      <div class="t-head" onclick="window._toggleT(${t.id})">
+        <div class="t-ico">${t.icon}</div>
+        <div class="t-meta">
+          <p class="t-pillar" style="color:${c}">${t.pillar}</p>
+          <p class="t-title">${t.title}</p>
+        </div>
+        <div class="t-right">
+          <span class="xp-badge" style="color:${c}">+${t.xpBase} XP</span>
+          <span style="font-size:11px;color:var(--muted)">${t.reward}</span>
+          <div class="t-status${isDone?' done':''}">${isDone?'✓':'—'}</div>
+        </div>
+      </div>
+      <div class="t-body" id="tb-${t.id}">
+        <p class="t-desc">${t.desc}</p>
+        ${isDone
+          ?`<p style="color:var(--p5);font-size:14px;font-weight:600;padding:12px 0;">✓ Completed — You earned ${t.reward}</p>`
+          :`<textarea class="story-box" id="st-${t.id}" placeholder="Write your real story here... (min 30 words)" oninput="window._wc(${t.id})"></textarea>
+           <div class="submit-row">
+             <span class="wc" id="wc-${t.id}">0 words</span>
+             <button class="btn${darkBg?' btn-gold':''}" style="${darkBg?'':'background:'+c+';color:white;'}padding:11px 22px;border-radius:6px;border:none;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;" onclick="window._submit(${t.id})">Submit Story</button>
+           </div>`}
+      </div>
+    </div>`;
+  }).join('');
+  // restore any typed drafts
+  TASKS.forEach(t=>{
+    if(storyDraft[t.id]&&!done.includes(t.id)){
+      const el=document.getElementById(`st-${t.id}`);
+      if(el){el.value=storyDraft[t.id];const w=el.value.trim().split(/\s+/).length;document.getElementById(`wc-${t.id}`).textContent=`${w} words`;}
+    }
+  });
+}
+
+let storyDraft={};// persists stories across tab switches
+
+window._toggleT=(id)=>document.getElementById(`tb-${id}`).classList.toggle('open');
+window._wc=(id)=>{const v=document.getElementById(`st-${id}`).value.trim();document.getElementById(`wc-${id}`).textContent=`${v?v.split(/\s+/).length:0} words`;storyDraft[id]=document.getElementById(`st-${id}`).value;};
+
+// ── SUBMIT ──
+window._submit=async(id)=>{
+  if(!CU||!UD)return;
+  const story=(document.getElementById(`st-${id}`)?.value||'').trim();
+  const words=story?story.split(/\s+/).length:0;
+  if(words<30){showToast('Write at least 30 words.',false);return;}
+  const task=TASKS.find(t=>t.id===id);if(!task)return;
+  if((UD.tasksCompleted||[]).includes(id)){showToast('Already completed!',false);return;}
+
+  // XP scales fully with word count — no flat base
+  let xpEarned;
+  if(words>=200)xpEarned=100;
+  else if(words>=150)xpEarned=90;
+  else if(words>=100)xpEarned=75;
+  else if(words>=60)xpEarned=55;
+  else if(words>=30)xpEarned=30;
+  else xpEarned=10;
+
+  // Show analyzer
+  const ov=document.getElementById('analyzerOverlay');
+  const msgs=['Analyzing leadership depth…','Reading your story…','Measuring impact…','Calculating XP…'];
+  let mi=0;ov.classList.add('show');
+  document.getElementById('anMsg').textContent=msgs[0];
+  const iv=setInterval(()=>{mi=(mi+1)%msgs.length;document.getElementById('anMsg').textContent=msgs[mi];},900);
+  await new Promise(r=>setTimeout(r,3200));
+  clearInterval(iv);
+  ['anIcon','anMsg','anSub'].forEach(id2=>document.getElementById(id2).style.display='none');
+  document.getElementById('xpAmt').textContent=xpEarned;
+  const xpEl=document.getElementById('xpPop');xpEl.style.display='block';
+  await new Promise(r=>setTimeout(r,1600));
+  ov.classList.remove('show');
+  ['anIcon','anMsg','anSub'].forEach(id2=>document.getElementById(id2).style.display='');
+  xpEl.style.display='none';
+
+  // Save
+  const newTasks=[...(UD.tasksCompleted||[]),id];
+  const newXP=(UD.xp||0)+xpEarned;
+  const newTitles=[...(UD.titles||[]),task.reward];
+  const newStories={...(UD.stories||{}),[id]:story};
+  await updateDoc(doc(db,'users',CU.uid),{tasksCompleted:newTasks,xp:newXP,titles:newTitles,stories:newStories});
+  UD={...UD,tasksCompleted:newTasks,xp:newXP,titles:newTitles,stories:newStories};
+  renderDash();
+  renderTasks(); // re-render tasks in place so story doesn't reset and completed state shows
+  if(newTasks.length===5){showTab('passport');}
+  showToast(`+${xpEarned} XP! You earned: ${task.reward} 🎉`,true);
+};
+
+// ── LEADERBOARD ──
+async function renderLB(){
+  const wrap=document.getElementById('lbWrap');
+  wrap.innerHTML='<div class="lb-empty">Loading...</div>';
+  try{
+    const q=query(collection(db,'users'),orderBy('xp','desc'));
+    const snap=await getDocs(q);
+    if(snap.empty){wrap.innerHTML='<div class="lb-empty">No entries yet. Be the first!</div>';return;}
+    const rc=['g','s','b'];let rows=[];
+    snap.forEach(d=>{
+      const u=d.data();const tc=(u.tasksCompleted||[]).length;
+      const rank=RANKS.find(r=>tc>=r.min);
+      rows.push(`<div class="lb-row">
+        <span class="lb-num${rows.length<3?' '+rc[rows.length]:''}">${rows.length+1}</span>
+        <div class="lb-av2">${u.avatar||'🦅'}</div>
+        <div class="lb-info"><p class="lb-name2">${u.username}</p><p class="lb-titles2">${rank.label} · ${(u.titles||[]).join(' ')}</p></div>
+        <span class="lb-stars2">${'⭐'.repeat(tc)}</span>
+        <span class="lb-xp2">${u.xp||0} XP</span>
+      </div>`);
+    });
+    wrap.innerHTML=rows.join('');
+  }catch(e){wrap.innerHTML='<div class="lb-empty">Could not load. Check Firestore rules.</div>';}
+}
+
+// ── STORY WALL ──
+const PILLAR_META=[
+  {id:1,name:'Initiative',icon:'⚡',col:'var(--p1)'},
+  {id:2,name:'Conscientiousness',icon:'👁️',col:'var(--p2)'},
+  {id:3,name:'Problem Solving',icon:'🧩',col:'var(--p5)'},
+  {id:4,name:'Perseverance',icon:'🔥',col:'var(--p3)'},
+  {id:5,name:'Innovativeness',icon:'🧠',col:'var(--p4)'},
+];
+
+let wallData=[];
+let wallFilter=0;
+
+async function renderWall(filterPillar){
+  wallFilter=filterPillar;
+  const container=document.getElementById('wallContent');
+  container.innerHTML='<div class="lb-empty">Loading stories...</div>';
+
+  // update filter btn styles
+  document.querySelectorAll('.wall-filter-btn').forEach((btn,i)=>{
+    const active=i===filterPillar;
+    const col=i===0?'var(--p1)':['var(--p1)','var(--p2)','var(--p5)','var(--p3)','var(--p4)'][i-1]||'var(--p1)';
+    btn.style.borderColor=active?col:'var(--border)';
+    btn.style.background=active?`rgba(${hexToRgb(col)},0.1)`:'none';
+    btn.style.color=active?col:'var(--muted)';
+  });
+
+  try{
+    const snap=await getDocs(query(collection(db,'users'),orderBy('xp','desc')));
+    wallData=[];
+    snap.forEach(d=>{
+      const u=d.data();
+      wallData.push({username:u.username,avatar:u.avatar||'🦅',tasksCompleted:u.tasksCompleted||[],stories:u.stories||{}});
+    });
+    renderWallCards();
+  }catch(e){container.innerHTML='<div class="lb-empty">Could not load stories.</div>';}
+}
+
+function renderWallCards(){
+  const container=document.getElementById('wallContent');
+  if(!wallData.length){container.innerHTML='<div class="lb-empty">No users yet.</div>';return;}
+
+  const pillarsToShow=wallFilter===0?PILLAR_META:[PILLAR_META[wallFilter-1]];
+  let html='';
+
+  pillarsToShow.forEach(pm=>{
+    if(wallFilter===0)html+=`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:${pm.col};margin:32px 0 16px;letter-spacing:2px;">${pm.icon} ${pm.name}</h3>`;
+    html+='<div class="story-wall-grid">';
+    wallData.forEach(u=>{
+      const done=u.tasksCompleted.includes(pm.id);
+      const story=u.stories?.[pm.id]||'';
+      const storyText=done&&story?story:'';
+      html+=`<div class="sw-card${done?'':' pending'}" style="border-color:${done?pm.col.replace('var(','').replace(')',''):'rgba(255,255,255,0.06)'}20;">
+        <div class="sw-card-top">
+          <div class="sw-av">${u.avatar}</div>
+          <div class="sw-user">
+            <p class="sw-username">${u.username}</p>
+            <p class="sw-pillar-tag" style="color:${pm.col}">${pm.icon} ${pm.name}</p>
+          </div>
+          ${done?`<span class="sw-xp" style="color:${pm.col}">✓</span>`:''}
+        </div>
+        ${done&&storyText
+          ?`<p class="sw-story clamped" id="sw-${u.username}-${pm.id}">${storyText}</p>
+             <button class="sw-read-more" style="color:${pm.col}" onclick="toggleStory('${u.username}',${pm.id})">Read more ↓</button>`
+          :done
+            ?`<p class="sw-pending-msg">Story not saved yet.</p>`
+            :`<p class="sw-pending-msg">⏳ Yet to complete this pillar.</p>`}
+      </div>`;
+    });
+    html+='</div>';
+    if(wallFilter===0)html+='<div style="height:1px;background:var(--border);margin:40px 0;"></div>';
+  });
+
+  container.innerHTML=html;
+}
+
+window.filterWall=(id)=>renderWall(id);
+
+window.toggleStory=(username,pillarId)=>{
+  const el=document.getElementById(`sw-${username}-${pillarId}`);
+  const btn=el?.nextElementSibling;
+  if(!el)return;
+  if(el.classList.contains('clamped')){el.classList.remove('clamped');if(btn)btn.textContent='Show less ↑';}
+  else{el.classList.add('clamped');if(btn)btn.textContent='Read more ↓';}
+};
+
+function hexToRgb(cssVar){
+  const map={'var(--p1)':'245,200,66','var(--p2)':'233,69,96','var(--p3)':'78,205,196','var(--p4)':'167,139,250','var(--p5)':'107,203,119'};
+  return map[cssVar]||'255,255,255';
+}
+function renderPP(){
+  if(!UD)return;
+  const done=(UD.tasksCompleted||[]).length>=5;
+  document.getElementById('ppLocked').style.display=done?'none':'block';
+  const card=document.getElementById('ppCard');
+  card.style.display=done?'block':'none';
+  if(done){
+    card.classList.add('unlocked');
+    document.getElementById('ppAv').textContent=UD.avatar||'?';
+    document.getElementById('ppUname').textContent=UD.username.toUpperCase();
+    document.getElementById('ppXP').textContent=UD.xp||0;
+    document.getElementById('ppTitles').innerHTML=(UD.titles||[]).map(t=>`<span class="t-chip" style="color:${TIER_COLORS[t]||'var(--text)'};">${t}</span>`).join('');
+  }
+}
+
+window.dlPassport=()=>{showToast('Use browser Print → Save as PDF to download! (Ctrl+P)',true);window.print();};
+
+// ── UTILS ──
+window.showToast=(msg,ok)=>{
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast show${ok?' ok':' err'}`;
+  setTimeout(()=>t.classList.remove('show'),3500);
+};
+window.scrollTo2=(id)=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+
+// ── 1. TYPING ANIMATION ──
+function runTyping(){
+  const l1=document.getElementById('typedLine1');
+  const l2=document.getElementById('typedLine2');
+  const cur=document.getElementById('typedCursor');
+  if(!l1||!l2)return;
+  const w1='FIRST';const w2='MOVE.';
+  l1.textContent='';l2.textContent='';
+  let i=0;
+  function typeChar(){
+    if(i<w1.length){l1.textContent+=w1[i];i++;setTimeout(typeChar,80);}
+    else if(i<w1.length+w2.length){l2.textContent+=w2[i-w1.length];i++;setTimeout(typeChar,90);}
+    else{setTimeout(()=>{if(cur)cur.style.display='none';},1200);}
+  }
+  setTimeout(typeChar,600);
+}
+runTyping();
+
+// ── 2. GLOBAL PROGRESS BAR ──
+async function updateGlobalBar(){
+  try{
+    const snap=await getDocs(collection(db,'users'));
+    let total=0,done=0;
+    snap.forEach(d=>{const u=d.data();total+=5;done+=(u.tasksCompleted||[]).length;});
+    const pct=total>0?Math.round((done/total)*100):0;
+    document.getElementById('globalBarFill').style.width=pct+'%';
+    const tip=document.getElementById('globalBarTip');
+    tip.textContent=`${done} of ${total} tasks completed globally`;
+    tip.classList.add('show');setTimeout(()=>tip.classList.remove('show'),4000);
+  }catch(e){console.log('globalbar err',e);}
+}
+setTimeout(updateGlobalBar,2000);
+
+// ── 3. XP ROLLING COUNTER ──
+function rollXP(el,target,duration=900){
+  if(!el)return;
+  const start=parseInt(el.textContent)||0;
+  if(start===target){el.textContent=target;return;}
+  const t0=performance.now();
+  function step(now){
+    const p=Math.min((now-t0)/duration,1);
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(start+(target-start)*e);
+    if(p<1)requestAnimationFrame(step);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.1});
+document.querySelectorAll('.reveal,.phrase-block').forEach(el=>obs.observe(el));
+
+// ── LIGHT PARALLAX ──
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;
+  document.querySelectorAll('.p-glow').forEach((el,i)=>{
+    el.style.transform=`translate(-50%,calc(-50% + ${sy*.018*(i%2===0?1:-1)}px))`;
+  });
+});
+
+// ── BG COLOR SHIFT ON SCROLL ──
+const PILLAR_COLORS=[
+  {r:245,g:200,b:66},  // p1 gold
+  {r:233,g:69,b:96},   // p2 red
+  {r:107,g:203,b:119}, // p3 green
+  {r:78,g:205,b:196},  // p4 teal
+  {r:167,g:139,b:250}, // p5 violet
+];
+
+const pillarSections=Array.from(document.querySelectorAll('.pillar-section'));
+
+function lerp(a,b,t){return a+(b-a)*t;}
+
+function updateBgShift(){
+  if(!pillarSections.length)return;
+  const wh=window.innerHeight;
+  const sy=window.scrollY;
+
+  let activeIdx=0;
+  let blendT=0;
+
+  pillarSections.forEach((sec,i)=>{
+    const rect=sec.getBoundingClientRect();
+    const center=rect.top+rect.height/2;
+    if(center<wh*0.6){
+      activeIdx=i;
+      blendT=Math.max(0,Math.min(1,(wh*0.6-center)/(wh*0.4)));
+    }
+  });
+
+  const nextIdx=Math.min(activeIdx+1,PILLAR_COLORS.length-1);
+  const c1=PILLAR_COLORS[activeIdx];
+  const c2=PILLAR_COLORS[nextIdx];
+  const r=Math.round(lerp(c1.r,c2.r,blendT));
+  const g=Math.round(lerp(c1.g,c2.g,blendT));
+  const b=Math.round(lerp(c1.b,c2.b,blendT));
+
+  document.body.style.background=`radial-gradient(ellipse 80% 60% at 50% 50%,rgba(${r},${g},${b},0.018) 0%,#060608 60%)`;
+}
+
+window.addEventListener('scroll',updateBgShift,{passive:true});
+updateBgShift();
+
+buildAvGrid();
+</script>
+</body>
+</html>
